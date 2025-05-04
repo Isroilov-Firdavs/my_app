@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\Eloncontroller;
+use App\Http\Controllers\AjaxConttroller;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,5 +36,9 @@ Route::get('/', [SiteController::class, 'index'])->name('home');
 Route::get('/about', [SiteController::class, 'about'])->name('about');
 Route::get('/cars', [SiteController::class, 'cars'])->name('cars');
 Route::get('/fetch-teachers', [TeacherController::class, 'fetch']);
+
+// Ajax CRUD
+Route::get('/ajax-data', [AjaxConttroller::class, 'getData'])->name('ajax.data');
+Route::resource('ajax', AjaxConttroller::class);
 
 require __DIR__.'/auth.php';

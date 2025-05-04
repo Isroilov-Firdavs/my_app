@@ -9,6 +9,7 @@
             <th>Familiya</th>
             <th>Email</th>
             <th>Til</th>
+            <th>Amallar</th>
         </tr>
     </thead>
     <tbody>
@@ -39,6 +40,7 @@
 </div>
 
 @endsection
+<a href="http://"></a>
 
 
 <!-- JQuery CDN -->
@@ -60,6 +62,9 @@
                         <td>${teacher.last_name}</td>
                         <td>${teacher.email}</td>
                         <td>${teacher.language}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm delete-btn" data-id="${teacher.id}">O‘chirish</button>
+                        </td>
                     </tr>`;
                 });
                 $('#teacherTable tbody').html(rows);
@@ -81,5 +86,26 @@
 
     $(document).ready(function () {
         loadTeachers();
+    });
+    // O‘chirish funksiyasi
+    $(document).on('click', '.delete-btn', function () {
+        if (!confirm("Aniq o‘chirmoqchimisiz?")) return;
+
+        let id = $(this).data('id');
+
+        $.ajax({
+            url: '/ajax/' + id,
+            type: 'DELETE',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (response) {
+                alert(response.message);
+                fetchData(); // Ma'lumotlarni qayta yuklash
+            },
+            error: function (xhr) {
+                alert("Xatolik yuz berdi");
+            }
+        });
     });
     </script>
