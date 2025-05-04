@@ -16,6 +16,13 @@
     </tbody>
 </table>
 
+<!-- Sahifalash tugmalari chiqadigan joy -->
+<nav>
+    <ul class="pagination justify-content-center" id="pagination">
+        <!-- Sahifa tugmalari shu yerda hosil bo'ladi -->
+    </ul>
+</nav>
+
 <!-- Modal (ixtiyoriy agar kerak bo'lsa) -->
 <div class="modal fade" id="teacherModal" tabindex="-1">
   <div class="modal-dialog">
@@ -38,28 +45,41 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-$(document).ready(function () {
-    $.ajax({
-        url: '/fetch-teachers',
-        method: 'GET',
-        success: function (data) {
-            let rows = '';
-            data.forEach(function (teacher) {
-                rows += `<tr>
-                    <td>${teacher.id}</td>
-                    <td>${teacher.first_name}</td>
-                    <td>${teacher.last_name}</td>
-                    <td>${teacher.email}</td>
-                    <td>${teacher.language}</td>
-                </tr>`;
-            });
-            $('#teacherTable tbody').html(rows);
-        },
-        error: function (err) {
-            alert('Maʼlumotlarni yuklashda xatolik yuz berdi');
-            console.log(err);
-        }
+    function loadTeachers(page = 1) {
+        $.ajax({
+            url: '/fetch-teachers?page=' + page,
+            method: 'GET',
+            success: function (response) {
+                let rows = '';
+                response.data.forEach(function (teacher) {
+                    rows += `<tr>
+                        <td>${teacher.id}</td>
+                        <td>${teacher.first_name}</td>
+                        <td>${teacher.last_name}</td>
+                        <td>${teacher.email}</td>
+                        <td>${teacher.language}</td>
+                    </tr>`;
+                });
+                $('#teacherTable tbody').html(rows);
+
+                // Paginatsiya hosil qilish
+                let pagination = '';
+                for (let i = 1; i <= response.last_page; i++) {
+                    pagination += `<li class="page-item ${i === response.current_page ? 'active' : ''}">
+                        <a class="page-link" href="#" onclick="loadTeachers(${i})">${i}</a>
+                    </li>`;
+                }
+                $('#pagination').html(pagination);
+            },
+            error: function () {
+                alert("Xatolik yuz berdi.");
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        loadTeachers();
     });
-});
-</script>
+    </script>

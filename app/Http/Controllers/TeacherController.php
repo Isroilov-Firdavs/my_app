@@ -97,7 +97,7 @@ class TeacherController extends Controller
     }
     public function fetch()
     {
-        $teachers = Teacher::all();
+        $teachers = Teacher::paginate(10);
         return response()->json($teachers);
     }
 }
